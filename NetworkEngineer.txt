@@ -1,0 +1,39 @@
+import java.util.*;
+public class NetworkEngineer {
+    public int makeAllWorkstationsConnected(int n, int[][] connections) {
+        if (connections.length < n - 1) {
+            return -1;
+        }
+        int[] parent = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+        for (int[] connection : connections) {
+            int p1 = find(parent, connection[0]);
+            int p2 = find(parent, connection[1]);
+            if (p1 != p2) {
+                parent[p1] = p2;
+            }
+        }
+        Set<Integer> uniqueParents = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            uniqueParents.add(find(parent, i));
+        }
+        return uniqueParents.size() - 1;
+    }
+
+    private int find(int[] parent, int i) {
+        if (parent[i] != i) {
+            parent[i] = find(parent, parent[i]);
+        }
+        return parent[i];
+    }
+
+public static void main(String[] args) {
+    NetworkEngineer networkEngineer = new NetworkEngineer();
+    int n = 4;
+    int[][] connections = {{0, 1}, {0, 2}, {1, 2}};
+    int minConnections = networkEngineer.makeAllWorkstationsConnected(n, connections);
+    System.out.println(minConnections); 
+}
+}
